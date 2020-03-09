@@ -26,13 +26,13 @@ class DonchianChannels(bt.Indicator):
             _samecolor=False,
              _name='HH',
               color='blue',
-               _fill_gt=('dcm', 'orange')
+            #    _fill_gt=('dcm', 'orange')
                ),
         dcl=dict(
             _samecolor=True,
              _name='LL',
               color='blue',
-               _fill_lt=('dcm', 'green')
+            #    _fill_lt=('dcm', 'green')
                ),
         high=dict(_samecolor=False, _name='H', color='orange'),
         low=dict(_samecolor=False, _name='L', color='green')

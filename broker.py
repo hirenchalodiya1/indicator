@@ -11,7 +11,6 @@ def main(strategy, stock_name='RS', only_positions=False):
     with open('terminal.log', 'a') as f:
         # sys.stdout = f
 
-        print()
         print(stock_name + " starts")
 
         cerebro = bt.Cerebro(cheat_on_open=True, stdstats=False)
