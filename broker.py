@@ -29,7 +29,7 @@ def main(strategy, stock_name='RS', only_positions=False):
 
         # feed data to cerebro engine
         data0 = YahooFinanceData(dataname=stock_name,
-                                 fromdate=datetime(2018, 2, 1),
+                                 fromdate=datetime(2019, 2, 1),
                                  todate=datetime(2020, 2, 1),
                                  adjclose=False)
         # print(dir(data0))
