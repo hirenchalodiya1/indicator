@@ -33,6 +33,11 @@ class DonchialtorXStrategy(bt.Strategy):
         self.cerebro.positive = 0
         self.cerebro.negative = 0
 
+        self.cerebro.wrong_count = 0
+        self.cerebro.total_count = 0
+
+        self.prediction = 'None'
+
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
             # Buy/Sell order submitted/accepted to/by broker - Nothing to do
@@ -77,6 +82,7 @@ class DonchialtorXStrategy(bt.Strategy):
 
     def next(self):
         # Simply log the closing price of the series from the reference
+        self._predict()
         if self.cheating:
             return
         self.operate()
@@ -85,6 +91,32 @@ class DonchialtorXStrategy(bt.Strategy):
         if not self.cheating:
             return
         self.operate()
+
+    def _predict(self):
+        # Count time
+        if self.prediction == 'Down':
+            if self.dataclose[0] > self.dataclose[-1]:
+                self.cerebro.wrong_count += 1
+        if self.prediction == 'Up':
+            if self.dataclose[0] < self.dataclose[-1]:
+                self.cerebro.wrong_count += 1
+        
+        self.prediction = 'None'
+        # Let's predict
+        x = self.st.lines.percK[0] # Today's K
+        z = self.st.lines.percD[0] # Today's D
+        y = self.st.lines.percK[-1] # Yesterday's K
+        w = self.st.lines.percD[-1] # Yesterday's D
+        adx = self.ad[0]
+        if x > z and adx >= 22 and y < w:
+            self.prediction = 'Up'
+            self.cerebro.total_count += 1
+            print('{}, Prediction Up'.format(str(self.datas[0].datetime.date(0))))
+        
+        elif x < z and adx >= 22 and y > w:
+            self.prediction = 'Down'
+            self.cerebro.total_count += 1
+            print('{}, Prediction Down'.format(str(self.datas[0].datetime.date(0))))
 
     def operate(self):
         self.log(f'Close, {self.dataclose[0]}')

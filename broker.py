@@ -29,7 +29,7 @@ def main(strategy, stock_name='RS', only_positions=False):
 
         # feed data to cerebro engine
         data0 = YahooFinanceData(dataname=stock_name,
-                                 fromdate=datetime(2016, 9, 1),
+                                 fromdate=datetime(2018, 2, 1),
                                  todate=datetime(2020, 2, 1),
                                  adjclose=False)
         # print(dir(data0))
@@ -49,12 +49,19 @@ def main(strategy, stock_name='RS', only_positions=False):
 
         # print accuracy
         if hasattr(cerebro, 'positive') and hasattr(cerebro, 'negative'):
-            print('Accuracy : %.2f%s' %((cerebro.positive*100/(cerebro.positive+cerebro.negative)) , chr(37)))
-
+            try:
+                print('Trading Accuracy : %.2f%s' %((cerebro.positive*100/(cerebro.positive+cerebro.negative)) , chr(37)))
+            except:
+                pass
+        
+        if hasattr(cerebro, 'wrong_count') and hasattr(cerebro, 'total_count'):
+            wrong_predictions = cerebro.wrong_count
+            total_predictions = cerebro.total_count
+            print('Prediction Accuracy : %.2f%s' %(((total_predictions - wrong_predictions)*100/total_predictions) , chr(37))) 
         # plot in cerebro
         cerebro.plot()
 
 
 
 if __name__ == "__main__":
-    main(Str, 'GOOG')
+    main(Str, 'GOOGL')
